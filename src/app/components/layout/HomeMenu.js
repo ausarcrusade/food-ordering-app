@@ -26,28 +26,7 @@ export default function HomeMenu() {
             price: 13.99,
             image: '/meatballs.png'
         },
-        {
-            _id: '4',
-            title: 'Pasta Pomodoro',
-            description: 'Simple pasta with tomato sauce',
-            price: 12.99,
-            image: '/meatballs.png'
-        },
 
-        {
-            _id: '5',
-            title: 'Penne Arrabbiata',
-            description: 'Spicy tomato sauce with garlic and red chilies',
-            price: 13.99,
-            image: '/meatballs.png'
-        },
-        {
-            _id: '6',
-            title: 'Linguine alle Vongole',
-            description: 'Linguine pasta with fresh clams in white wine sauce',
-            price: 16.99,
-            image: '/meatballs.png'
-        }
         // Add more menu items as needed
     ];
 

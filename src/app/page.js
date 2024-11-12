@@ -1,12 +1,14 @@
 import Hero from "./components/layout/hero";
 import HomeMenu from "./components/layout/HomeMenu";
 import SectionHeaders from "./components/layout/sectionheaders";
+import HomeMenuWithAddOns from "./components/layout/HomeMenuWithAddOns";
 export default function Home() {
 
   return (
     <>
       <Hero />
       <HomeMenu />
+      <HomeMenuWithAddOns />
       <section>
         <SectionHeaders 
           subHeader="Our Story"
