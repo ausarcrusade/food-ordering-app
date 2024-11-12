@@ -1,23 +1,42 @@
 import {User} from "@/models/User";
-import bcrypt from "bcrypt";
 import mongoose from "mongoose";
+require('dotenv').config();
+import bcrypt from 'bcrypt';
 
 export async function POST(req) {
-    const body = await req.json();
-    mongoose.connect(process.env.MONGO_URL);
-    const pass = body.password;
-    if (!pass?.length || pass.length < 5) {
-      new Error('password must be at least 5 characters');
-    }
+  const body = await req.json();
+  const {email, password} = body;
+
+  // Validate password length
+  if (password.length < 5) {
+    return Response.json(
+      {error: 'password_too_short'},
+      {status: 422}
+    );
+  }
   
-    const notHashedPassword = pass;
-    const salt = bcrypt.genSaltSync(10);
-    body.password = bcrypt.hashSync(notHashedPassword, salt);
+  mongoose.connect(process.env.MONGO_URL);
   
-    const createdUser = await User.create(body);
-    return Response.json(createdUser);
+  const existingUser = await User.findOne({email});
+  if (existingUser) {
+    return Response.json(
+      {error: 'email_exists'},
+      {status: 422}
+    );
   }
 
+  // Hash the password
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash(password, salt);
+
+  // Create user with hashed password
+  const createdUser = await User.create({
+    email,
+    password: hashedPassword
+  });
+  
+  return Response.json(createdUser);
+}
   
 // Receives user data including a password
 // Validates the password length
