@@ -130,7 +130,7 @@ export default function AddOnModal({
                     <div className="p-6 border-b border-gray-200">
                         <h2 className="text-3xl font-bold text-center text-primary mb-4">Build Your Own Pasta!</h2>
                         <div className="flex items-center gap-6">
-                            <div className="relative w-32 h-32 overflow-hidden rounded-lg shadow-md">
+                            <div className="relative w-48 h-32 overflow-hidden rounded-lg shadow-md">
                                 <Image 
                                     src={item.image || "/meatballs.png"} 
                                     alt={item.title} 

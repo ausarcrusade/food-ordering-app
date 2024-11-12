@@ -154,6 +154,10 @@ function CartProvider({ children }) {
         saveCart(newCart);
     }
 
+    function clearCart() {
+        saveCart([]);
+    }
+
     if (isLoading) {
         return <div>Loading cart...</div>;
     }
@@ -164,6 +168,7 @@ function CartProvider({ children }) {
             addToCart, 
             updateQuantity, 
             removeFromCart,
+            clearCart,
             isLoading 
         }}>
             {children}

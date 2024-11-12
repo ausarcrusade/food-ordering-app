@@ -50,8 +50,13 @@ export function CartContextProvider({ children }) {
         });
     }
 
+    function removeFromCart(productId) {
+        const newCart = cartProducts.filter(item => item._id !== productId);
+        saveCart(newCart);
+    }
+
     return (
-        <CartContext.Provider value={{ cartProducts, setCartProducts, addToCart }}>
+        <CartContext.Provider value={{ cartProducts, setCartProducts, addToCart, removeFromCart }}>
             {children}
         </CartContext.Provider>
     );
