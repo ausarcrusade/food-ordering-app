@@ -1,6 +1,9 @@
 import { Roboto, Roboto_Mono } from 'next/font/google';
 import "./globals.css";
 import Header from './components/layout/header';
+import { AppProvider } from './components/menu/AppContext';
+
+
 const roboto = Roboto({
   subsets: ['latin'],
   weight: ['100', '300', '400', '500', '700', '900'],
@@ -24,14 +27,14 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={`${roboto.variable} ${robotoMono.variable} antialiased`}>
         <main className="max-w-4xl mx-auto p-4">
-          <Header />
-          {children}
-          <footer className="border-t p-8 text-center text-gray-500 mt-10">
-            &copy; 2024 All Rights Reserved.
-          </footer>
-
-          </main>
-
+          <AppProvider>
+            <Header />
+            {children}
+            <footer className="border-t p-8 text-center text-gray-500 mt-10">
+              &copy; 2024 All Rights Reserved.
+            </footer>
+          </AppProvider>
+        </main>
       </body>
     </html>
   );
