@@ -10,7 +10,30 @@ function CartProvider({ children }) {
     const [isLoading, setIsLoading] = useState(true);
     const [previousStatus, setPreviousStatus] = useState(status);
 
-    // Monitor session status changes
+    // Initial load of cart
+    useEffect(() => {
+        async function loadInitialCart() {
+            if (status === 'loading') return;
+
+            if (status === 'authenticated') {
+                // Load cart from database
+                const response = await fetch('/api/cart');
+                if (response.ok) {
+                    const dbCart = await response.json();
+                    setCartProducts(dbCart);
+                }
+            } else {
+                // Load cart from localStorage
+                const localCart = JSON.parse(localStorage.getItem('cart') || '[]');
+                setCartProducts(localCart);
+            }
+            setIsLoading(false);
+        }
+
+        loadInitialCart();
+    }, [status]);
+
+    // Handle session status changes
     useEffect(() => {
         if (previousStatus !== status) {
             setPreviousStatus(status);
@@ -18,7 +41,6 @@ function CartProvider({ children }) {
         }
     }, [status, previousStatus]);
 
-    // Handle session status changes
     async function handleSessionChange() {
         setIsLoading(true);
         try {
@@ -42,9 +64,9 @@ function CartProvider({ children }) {
                 }
             } else if (status === 'unauthenticated' && previousStatus === 'authenticated') {
                 // User just logged out - save current cart to localStorage
-                localStorage.setItem('cart', JSON.stringify(cartProducts));
-                const localCart = JSON.parse(localStorage.getItem('cart') || '[]');
-                setCartProducts(localCart);
+                const currentCart = [...cartProducts];
+                localStorage.setItem('cart', JSON.stringify(currentCart));
+                setCartProducts(currentCart);
             }
         } catch (error) {
             console.error('Error handling session change:', error);
@@ -62,11 +84,8 @@ function CartProvider({ children }) {
             );
 
             if (existingItemIndex !== -1) {
-                // Item exists in both carts - sum quantities
-                mergedCart[existingItemIndex] = {
-                    ...mergedCart[existingItemIndex],
-                    quantity: mergedCart[existingItemIndex].quantity + localItem.quantity
-                };
+                // Replace item from local cart with database cart item
+                mergedCart[existingItemIndex] = { ...localItem };
             } else {
                 // Item only exists in local cart - add it
                 mergedCart.push({ ...localItem });
@@ -79,6 +98,8 @@ function CartProvider({ children }) {
     // Function to save cart based on authentication status
     async function saveCart(newCart) {
         try {
+            setCartProducts(newCart); // Update state first
+
             if (status === 'authenticated') {
                 // Save to database if logged in
                 await fetch('/api/cart', {
@@ -86,16 +107,16 @@ function CartProvider({ children }) {
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ cart: newCart }),
                 });
+            } else {
+                // Save to localStorage if not logged in
+                localStorage.setItem('cart', JSON.stringify(newCart));
             }
-            // Always save to localStorage as backup
-            localStorage.setItem('cart', JSON.stringify(newCart));
-            setCartProducts(newCart);
         } catch (error) {
             console.error('Error saving cart:', error);
         }
     }
 
-    // Cart operations remain the same but use the new saveCart function
+    // Cart operations
     function addToCart(product, quantity = 1) {
         const newCart = [...cartProducts];
         const existingProductIndex = newCart.findIndex(
@@ -103,11 +124,13 @@ function CartProvider({ children }) {
         );
 
         if (existingProductIndex !== -1) {
+            // Update quantity if product exists
             newCart[existingProductIndex] = {
                 ...newCart[existingProductIndex],
-                quantity: newCart[existingProductIndex].quantity + quantity
+                quantity: (newCart[existingProductIndex].quantity || 0) + quantity
             };
         } else {
+            // Add new product with quantity
             newCart.push({ ...product, quantity });
         }
 
