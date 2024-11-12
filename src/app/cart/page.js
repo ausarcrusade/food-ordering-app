@@ -2,9 +2,11 @@
 import { useCart } from "../components/menu/AppContext";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 export default function CartPage() {
+    const router = useRouter();
     const { cartProducts, updateQuantity, removeFromCart, clearCart } = useCart();
     const [deliveryOption, setDeliveryOption] = useState('pickup'); // 'pickup' or 'delivery'
     const deliveryFee = deliveryOption === 'delivery' ? 5.00 : 0.00;
@@ -14,6 +16,16 @@ export default function CartPage() {
     );
     
     const total = subtotal + deliveryFee;
+
+    const handleCheckout = () => {
+        if (deliveryOption === 'pickup') {
+            // Redirect directly to payment page for pickup
+            router.push('/payment');
+        } else {
+            // Redirect to address input page for delivery
+            router.push('/delivery-address');
+        }
+    };
 
     return (
         <div className="max-w-6xl mx-auto py-8 px-4">
@@ -188,8 +200,11 @@ export default function CartPage() {
                                 </div>
                             </div>
 
-                            <button className="w-full bg-primary text-white py-3 rounded-md font-bold hover:bg-primary/90 transition-colors">
-                                Checkout
+                            <button 
+                                onClick={handleCheckout}
+                                className="w-full bg-primary text-white py-3 rounded-md font-bold hover:bg-primary/90 transition-colors"
+                            >
+                                Proceed to {deliveryOption === 'pickup' ? 'Payment' : 'Delivery Details'}
                             </button>
                         </div>
                     </div>
