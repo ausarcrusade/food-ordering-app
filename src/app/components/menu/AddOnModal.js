@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import Image from "next/image";
+import { useCart } from "./AppContext";
 
 export default function AddOnModal({ 
     isOpen, 
@@ -74,7 +75,7 @@ export default function AddOnModal({
         setTotalPrice(item.price + addOnPrice);
 
         const selectedIngredients = localSelectedAddOns.map(id => addOns.find(a => a.id === id)?.name).filter(Boolean);
-        setPastaName(`${item.title} with ${selectedIngredients.join(', ')}`);
+        setPastaName(`${item.title} `);
     }, [localSelectedAddOns, item.price, item.title]);
 
     useEffect(() => {
@@ -100,11 +101,26 @@ export default function AddOnModal({
         );
     };
 
+    const { addToCart } = useCart();
+
     const handleAddToCart = () => {
         const selectedAddOnDetails = addOns.filter((addOn) =>
             localSelectedAddOns.includes(addOn.id)
         );
-        onAddToCart(item, selectedAddOnDetails);
+        
+        // Create a customized item with add-ons and updated price
+        const customizedItem = {
+            _id: `${item._id}-${localSelectedAddOns.join('-')}`, // Create unique ID for this combination
+            title: pastaName,
+            description: `${item.description} with ${selectedAddOnDetails.map(addon => addon.name).join(', ')}`,
+            price: totalPrice,
+            image: generatedImages[item._id] || item.image,
+            baseItem: item,
+            addOns: selectedAddOnDetails,
+            quantity: 1
+        };
+
+        addToCart(customizedItem);
         onAddOnSelection(localSelectedAddOns);
         onClose();
     };
@@ -129,8 +145,8 @@ export default function AddOnModal({
                     {/* Header Section */}
                     <div className="p-6 border-b border-gray-200">
                         <h2 className="text-3xl font-bold text-center text-primary mb-4">Build Your Own Pasta!</h2>
-                        <div className="flex items-center gap-6">
-                            <div className="relative w-48 h-32 overflow-hidden rounded-lg shadow-md">
+                        <div className="flex flex-col md:flex-row items-center gap-6">
+                            <div className="relative w-48 h-48 overflow-hidden rounded-lg shadow-md flex-shrink-0">
                                 <Image 
                                     src={item.image || "/meatballs.png"} 
                                     alt={item.title} 
@@ -138,10 +154,10 @@ export default function AddOnModal({
                                     className="object-cover transform hover:scale-110 transition-transform duration-300"
                                 />
                             </div>
-                            <div>
+                            <div className="flex-1">
                                 <h3 className="text-2xl font-semibold text-gray-800">{item.title}</h3>
                                 <p className="text-gray-600 mt-1">{item.description}</p>
-                                <div className="mt-2 space-y-1">
+                                <div className="mt-4 space-y-2">
                                     <p className="text-gray-600 font-medium">Base Price: ${item.price.toFixed(2)}</p>
                                     <div className="flex items-baseline gap-2">
                                         <p className="text-gray-600 font-medium">Add-ons:</p>
@@ -149,8 +165,8 @@ export default function AddOnModal({
                                             +${(totalPrice - item.price).toFixed(2)}
                                         </p>
                                     </div>
-                                    <div className="pt-1 border-t border-gray-200">
-                                        <p className="text-lg font-bold text-primary">
+                                    <div className="pt-2 border-t border-gray-200">
+                                        <p className="text-xl font-bold text-primary">
                                             Total: ${totalPrice.toFixed(2)}
                                         </p>
                                     </div>
@@ -162,38 +178,64 @@ export default function AddOnModal({
                     {/* Ingredients Section */}
                     <div className="p-6">
                         <h4 className="text-xl font-semibold mb-4">Choose your ingredients:</h4>
-                        <div className="space-y-6">
+                        <div className="space-y-4">
                             {['protein', 'vegetable', 'cheese'].map(category => (
-                                <div key={category} className="bg-gray-50 p-4 rounded-lg">
-                                    <h5 className="font-medium capitalize text-lg mb-3 text-gray-700">
-                                        {category}
-                                    </h5>
-                                    <div className="grid grid-cols-2 gap-3">
-                                        {addOns.filter(addOn => addOn.category === category).map((addOn) => (
-                                            <label 
-                                                key={addOn.id} 
-                                                className={`flex items-center justify-center p-3 rounded-lg cursor-pointer transition-all duration-200 
-                                                    ${localSelectedAddOns.includes(addOn.id) 
-                                                        ? 'bg-primary/10 border-primary' 
-                                                        : 'bg-white border-gray-200'} 
-                                                    border-2 hover:shadow-md`}
-                                            >
-                                                <input
-                                                    type="checkbox"
-                                                    id={addOn.id}
-                                                    checked={localSelectedAddOns.includes(addOn.id)}
-                                                    onChange={() => handleAddOnChange(addOn.id)}
-                                                    className="hidden"
-                                                />
-                                                <span className="text-xl mr-2">{addOn.icon}</span>
-                                                <div className="flex-1 text-center">
-                                                    <p className="font-medium">{addOn.name}</p>
-                                                    <p className="text-sm text-gray-600">+${addOn.price.toFixed(2)}</p>
-                                                </div>
-                                            </label>
-                                        ))}
+                                <details 
+                                    key={category} 
+                                    className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden"
+                                >
+                                    <summary className="p-4 cursor-pointer hover:bg-gray-50 flex items-center justify-between">
+                                        <div className="flex items-center gap-2">
+                                            <span className="font-medium capitalize text-lg text-gray-800">
+                                                {category}
+                                            </span>
+                                            <span className="text-sm text-gray-500">
+                                                ({addOns.filter(addOn => addOn.category === category).length} options)
+                                            </span>
+                                        </div>
+                                        <svg 
+                                            className="w-5 h-5 text-gray-500 transform transition-transform duration-200" 
+                                            fill="none" 
+                                            viewBox="0 0 24 24" 
+                                            stroke="currentColor"
+                                        >
+                                            <path 
+                                                strokeLinecap="round" 
+                                                strokeLinejoin="round" 
+                                                strokeWidth={2} 
+                                                d="M19 9l-7 7-7-7" 
+                                            />
+                                        </svg>
+                                    </summary>
+                                    
+                                    <div className="p-4 bg-gray-50 border-t border-gray-200">
+                                        <div className="grid grid-cols-2 gap-3">
+                                            {addOns.filter(addOn => addOn.category === category).map((addOn) => (
+                                                <label 
+                                                    key={addOn.id} 
+                                                    className={`flex items-center justify-center p-3 rounded-lg cursor-pointer transition-all duration-200 
+                                                        ${localSelectedAddOns.includes(addOn.id) 
+                                                            ? 'bg-primary/10 border-primary shadow-sm' 
+                                                            : 'bg-white border-gray-200 hover:border-primary/30'} 
+                                                        border-2`}
+                                                >
+                                                    <input
+                                                        type="checkbox"
+                                                        id={addOn.id}
+                                                        checked={localSelectedAddOns.includes(addOn.id)}
+                                                        onChange={() => handleAddOnChange(addOn.id)}
+                                                        className="hidden"
+                                                    />
+                                                    <span className="text-xl mr-2">{addOn.icon}</span>
+                                                    <div className="flex-1">
+                                                        <p className="font-medium text-gray-800">{addOn.name}</p>
+                                                        <p className="text-sm text-primary font-medium">+${addOn.price.toFixed(2)}</p>
+                                                    </div>
+                                                </label>
+                                            ))}
+                                        </div>
                                     </div>
-                                </div>
+                                </details>
                             ))}
                         </div>
                     </div>
@@ -201,9 +243,22 @@ export default function AddOnModal({
                     {/* Summary Section */}
                     <div className="border-t border-gray-200 p-6 bg-gray-50">
                         <div className="mb-4">
-                            <h4 className="text-lg font-semibold mb-2 text-center">Your Custom Pasta</h4>
-                            <p className="text-gray-700 mb-4 text-center">{pastaName}</p>
+                            <h4 className="text-2xl font-semibold mb-2 text-center">Your Custom Pasta</h4>
+                            <p className="text-xl font-semibold text-primary text-center">{pastaName}</p>
                             
+                            {/* Updated styling for add-ons display */}
+                            {localSelectedAddOns.length > 0 && (
+                                <p className="text-center mb-4">
+                                    <span className="text-sm text-gray-500">with <br /> </span>
+                                    <span className="text-base font-medium text-primary">
+                                        {localSelectedAddOns
+                                            .map(id => addOns.find(a => a.id === id)?.name)
+                                            .filter(Boolean)
+                                            .join(', ')}
+                                    </span>
+                                </p>
+                            )}
+
                             {/* Generated Image Section */}
                             <div className="space-y-4">
                                 <div className="flex flex-col items-center">

@@ -20,14 +20,14 @@ export default function HomeMenuWithAddOns() {
         },
         {
             _id: '2',
-            title: 'Tomato Base',
+            title: 'Tomato Base ',
             description: 'Tomato pasta sauce with garlic and olive oil',
             price: 1.99,
             image: '/meatballs.png'
         },
         {
             _id: '3',
-            title: 'Tomyum Cream Base',
+            title: 'Tomyum Base',
             description: 'Tomyum flavored creamy pasta sauce',
             price: 1.99,
             image: '/meatballs.png'
@@ -67,17 +67,26 @@ export default function HomeMenuWithAddOns() {
             <div className="grid grid-cols-3 gap-4 my-10">
                 {menuItems.map(item => (
                     <div key={item._id} className="bg-gray-100 hover:bg-white p-4 rounded-md shadow-md text-center flex flex-col items-center">
-                        <Image src={item.image || "/meatballs.png"} alt={item.title} width={300} height={300} />
+                        <Image 
+                            src={item.image || "/meatballs.png"} 
+                            alt={item.title} 
+                            width={300} 
+                            height={300} 
+                            className="object-cover"
+                        />
                         <h4 className="text-2xl font-semibold my-1">
                             {item.title}
                         </h4>
-                        <p className="text-gray-500">
+                        <p className="text-gray-500 mb-2">
                             {item.description}
+                        </p>
+                        <p className="text-2xl font-bold text-primary mb-4">
+                            Starting at ${item.price.toFixed(2)}
                         </p>
                         <button 
                             onClick={() => handleAddToCartClick(item)}
-                            className="mt-4 bg-primary text-white px-8 py-2 rounded-md font-bold">
-                            Starting at ${item.price}
+                            className="mt-4 bg-primary text-white px-8 py-2 rounded-md font-bold hover:bg-primary/90 transition-colors">
+                            Customize
                         </button>
                     </div>
                 ))}
