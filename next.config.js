@@ -8,6 +8,7 @@ const nextConfig = {
       },
       // Add any other domains you need with specific patterns
     ],
+    domains: ['oaidalleapiprodscus.blob.core.windows.net'],
   },
 }
 

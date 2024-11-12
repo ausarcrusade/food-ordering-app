@@ -8,6 +8,7 @@ export default function HomeMenuWithAddOns() {
     const [selectedItem, setSelectedItem] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedAddOns, setSelectedAddOns] = useState({});
+    const [generatedImages, setGeneratedImages] = useState({});
 
     const menuItems = [
         {
@@ -50,6 +51,13 @@ export default function HomeMenuWithAddOns() {
         }));
     };
 
+    const handleImageGenerated = (itemId, imageUrl) => {
+        setGeneratedImages(prev => ({
+            ...prev,
+            [itemId]: imageUrl
+        }));
+    };
+
     return (
         <section>
             <SectionHeaders 
@@ -82,6 +90,8 @@ export default function HomeMenuWithAddOns() {
                     item={selectedItem}
                     selectedAddOns={selectedAddOns[selectedItem._id] || []}
                     onAddOnSelection={(addOns) => handleAddOnSelection(selectedItem._id, addOns)}
+                    generatedImages={generatedImages}
+                    onImageGenerated={handleImageGenerated}
                 />
             )}
         </section>

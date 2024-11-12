@@ -18,10 +18,13 @@ export default function MenuItem({ _id, title, description, price, image }) {
             <h4 className="text-2xl font-semibold my-1">
                 {title}
             </h4>
-            <p className="text-gray-500">
+            <p className="text-gray-500 mb-2">
                 {description}
             </p>
-            <div className="flex items-center gap-2 mt-4">
+            <p className="text-2xl font-bold text-primary mb-4">
+                ${price.toFixed(2)}
+            </p>
+            <div className="flex items-center gap-2 ">
                 <button 
                     onClick={() => setQuantity(prev => Math.max(1, prev - 1))}
                     className="bg-gray-200 px-2 py-1 rounded-md">
@@ -37,7 +40,7 @@ export default function MenuItem({ _id, title, description, price, image }) {
             <button 
                 onClick={handleAddToCart}
                 className="mt-4 bg-primary text-white px-8 py-2 rounded-md font-bold">
-                Add to Cart ${price}
+                Add to Cart
             </button>
         </div>
     );
