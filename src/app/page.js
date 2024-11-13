@@ -11,6 +11,8 @@ export default function Home() {
       <Hero />
       <section id="menu">
         <HomeMenu />
+      </section>
+      <section id="menu-with-add-ons">
         <HomeMenuWithAddOns />
       </section>
       <section id="about" className="py-16 bg-gray-50">
@@ -103,8 +105,21 @@ export default function Home() {
             <p className="text-gray-700 mb-8">
               From classic combinations to bold new flavors, your perfect pasta dish is just waiting to be created. Take control of your pasta experience and let us bring your culinary vision to life. Create your very own signature pasta dish today!
             </p>
-            <button onClick={() => document.getElementById('menu').scrollIntoView({ behavior: 'smooth' })} 
-                    className="bg-primary text-white px-10 py-2 rounded-full font-semibold hover:bg-primary/90 transition-colors w-64 mx-auto block">
+            <button 
+              onClick={() => {
+                const element = document.getElementById('menu-with-add-ons');
+                const headerOffset = 100;
+                if (element) {
+                  const elementPosition = element.getBoundingClientRect().top;
+                  const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                  
+                  window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                  });
+                }
+              }} 
+              className="bg-primary text-white px-10 py-2 rounded-full font-semibold hover:bg-primary/90 transition-colors w-64 mx-auto block">
               Start Creating Your Pasta
             </button>
           </div>

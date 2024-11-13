@@ -3,8 +3,15 @@ import Image from "next/image";
 export default function Hero() {
   const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId);
+    const headerOffset = 100;
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+      
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
     }
   };
 
