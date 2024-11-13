@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCart } from "../components/menu/AppContext";
 import { useSession } from 'next-auth/react';
@@ -35,12 +35,15 @@ export default function PaymentSuccessPage() {
     const { data: session } = useSession();
     const [orderDetails, setOrderDetails] = useState(null);
     const [isProcessing, setIsProcessing] = useState(false);
+    const [hasProcessed, setHasProcessed] = useState(false);
+    const processedRef = useRef(false);
 
     useEffect(() => {
         const queryParams = new URLSearchParams(window.location.search);
         const paymentIntentId = queryParams.get('payment_intent');
 
-        if (paymentIntentId && !isProcessing && !orderDetails) {
+        if (paymentIntentId && !processedRef.current) {
+            processedRef.current = true;
             setIsProcessing(true);
             
             fetch('/api/order/confirm', {
@@ -57,7 +60,7 @@ export default function PaymentSuccessPage() {
             .catch(err => console.error('Error fetching order details:', err))
             .finally(() => setIsProcessing(false));
         }
-    }, [clearCart, isProcessing, orderDetails]);
+    }, []);
 
     if (!orderDetails) {
         return (

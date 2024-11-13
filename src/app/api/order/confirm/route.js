@@ -2,6 +2,7 @@ import { getSession } from "@/lib/auth";
 import { User } from "@/models/User";
 import { Order } from "@/models/Order";
 import { connectToDatabase } from "@/lib/mongoose";
+import { sendOrderConfirmationEmail } from "@/lib/email";
 import Stripe from 'stripe';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
@@ -12,6 +13,20 @@ export async function POST(req) {
         const { paymentIntentId } = await req.json();
 
         await connectToDatabase();
+
+        // Check if order already exists for this payment intent
+        const existingOrder = await Order.findOne({ paymentIntentId });
+        if (existingOrder) {
+            return Response.json({
+                success: true,
+                orderNumber: existingOrder.orderNumber,
+                deliveryOption: existingOrder.deliveryOption,
+                address: existingOrder.address,
+                total: existingOrder.total,
+                items: existingOrder.items,
+                createdAt: existingOrder.createdAt
+            });
+        }
 
         // Retrieve payment intent from Stripe
         const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
@@ -68,6 +83,24 @@ export async function POST(req) {
                 { $set: { cart: [] } }
             );
         }
+
+        // Send confirmation email
+        try {
+            await sendOrderConfirmationEmail({
+                email: orderData.email,
+                orderNumber: order.orderNumber,
+                orderDetails: {
+                    items: order.items,
+                    total: order.total,
+                    deliveryOption: order.deliveryOption,
+                    address: order.address
+                }
+            });
+        } catch (emailError) {
+            console.error('Failed to send confirmation email:', emailError);
+            // Don't throw error as order was successful
+        }
+        console.log('Created order items:', JSON.stringify(order.items, null, 2));
 
         return Response.json({
             success: true,

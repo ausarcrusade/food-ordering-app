@@ -14,7 +14,7 @@ export default function AddOnModal({
     onImageGenerated
 }) {
     const [isGeneratingImage, setIsGeneratingImage] = useState(false);
-    const [localSelectedAddOns, setLocalSelectedAddOns] = useState(selectedAddOns);
+    const [localSelectedAddOns, setLocalSelectedAddOns] = useState(selectedAddOns || []);
     const [totalPrice, setTotalPrice] = useState(item.price);
     const [pastaName, setPastaName] = useState(item.title);
 
@@ -79,8 +79,10 @@ export default function AddOnModal({
     }, [localSelectedAddOns, item.price, item.title]);
 
     useEffect(() => {
-        setLocalSelectedAddOns(selectedAddOns);
-    }, [selectedAddOns]);
+        if (selectedAddOns) {
+            setLocalSelectedAddOns(selectedAddOns);
+        }
+    }, []);
 
     useEffect(() => {
         if (isOpen) {
