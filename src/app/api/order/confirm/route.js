@@ -102,6 +102,11 @@ export async function POST(req) {
         }
         console.log('Created order items:', JSON.stringify(order.items, null, 2));
 
+        console.log('Order items with images:', order.items.map(item => ({
+            title: item.title,
+            image: item.image
+        })));
+
         return Response.json({
             success: true,
             orderNumber: order.orderNumber,
