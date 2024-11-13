@@ -21,6 +21,8 @@ export default function PaymentPage() {
     );
 
     useEffect(() => {
+        const deliveryAddress = localStorage.getItem('deliveryAddress');
+        
         // Create PaymentIntent as soon as the page loads
         fetch('/api/payment', {
             method: 'POST',
@@ -28,6 +30,8 @@ export default function PaymentPage() {
             body: JSON.stringify({
                 amount: subtotal,
                 items: cartProducts,
+                deliveryOption: deliveryAddress ? 'delivery' : 'pickup',
+                address: deliveryAddress ? JSON.parse(deliveryAddress) : null
             }),
         })
         .then((res) => res.json())
@@ -37,6 +41,8 @@ export default function PaymentPage() {
                 return;
             }
             setClientSecret(data.clientSecret);
+            // Clear delivery address from localStorage
+            localStorage.removeItem('deliveryAddress');
         })
         .catch((err) => {
             setError('Failed to initialize payment');

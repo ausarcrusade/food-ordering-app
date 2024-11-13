@@ -1,64 +1,66 @@
 'use client';
 import { useState } from 'react';
-import { useStripe, useElements, PaymentElement } from '@stripe/react-stripe-js';
+import { useRouter } from 'next/navigation';
+import { PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
 
 export default function PaymentForm() {
-  const stripe = useStripe();
-  const elements = useElements();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+    const stripe = useStripe();
+    const elements = useElements();
+    const router = useRouter();
+    const [isProcessing, setIsProcessing] = useState(false);
+    const [error, setError] = useState(null);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+    const handleSubmit = async (e) => {
+        e.preventDefault();
 
-    if (!stripe || !elements) {
-      return;
-    }
+        if (!stripe || !elements) {
+            return;
+        }
 
-    setIsLoading(true);
-    setError(null);
+        setIsProcessing(true);
+        setError(null);
 
-    try {
-      const { error: submitError } = await elements.submit();
-      if (submitError) {
-        setError(submitError.message);
-        return;
-      }
+        try {
+            const { error, paymentIntent } = await stripe.confirmPayment({
+                elements,
+                redirect: 'if_required',
+            });
 
-      const { error: paymentError } = await stripe.confirmPayment({
-        elements,
-        confirmParams: {
-          return_url: `${window.location.origin}/payment/success`,
-        },
-      });
+            if (error) {
+                setError(error.message);
+                setIsProcessing(false);
+                return;
+            }
 
-      if (paymentError) {
-        setError(paymentError.message);
-      }
-    } catch (err) {
-      setError('An unexpected error occurred.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+            if (paymentIntent.status === 'succeeded') {
+                // Redirect to success page with payment intent ID
+                router.push(`/success?payment_intent=${paymentIntent.id}`);
+            }
+        } catch (err) {
+            setError('An unexpected error occurred.');
+            console.error('Payment error:', err);
+        } finally {
+            setIsProcessing(false);
+        }
+    };
 
-  return (
-    <form onSubmit={handleSubmit} className="mt-6 space-y-4">
-      <PaymentElement />
-      
-      {error && (
-        <div className="text-red-500 text-sm p-2 bg-red-50 rounded">
-          {error}
-        </div>
-      )}
-
-      <button
-        type="submit"
-        disabled={!stripe || isLoading}
-        className="w-full bg-primary text-white py-3 rounded-md font-bold hover:bg-primary/90 transition-colors disabled:bg-gray-300"
-      >
-        {isLoading ? 'Processing...' : 'Pay Now'}
-      </button>
-    </form>
-  );
+    return (
+        <form onSubmit={handleSubmit} className="space-y-6">
+            <PaymentElement />
+            
+            {error && (
+                <div className="bg-red-50 text-red-500 p-4 rounded-md">
+                    {error}
+                </div>
+            )}
+            
+            <button
+                type="submit"
+                disabled={!stripe || isProcessing}
+                className="w-full bg-primary text-white py-3 rounded-md font-bold hover:bg-primary/90 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
+            >
+                {isProcessing ? 'Processing...' : 'Pay Now'}
+            </button>
+        </form>
+    );
 }

@@ -13,8 +13,8 @@ export default function DeliveryAddressPage() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Here you would typically save the address to your state management
-        // For now, we'll just redirect to payment
+        // Save address to localStorage for payment page
+        localStorage.setItem('deliveryAddress', JSON.stringify(address));
         router.push('/payment');
     };
 

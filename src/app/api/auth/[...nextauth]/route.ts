@@ -67,7 +67,7 @@ export const authOptions = {
       return session;
     },
   },
-};
+} as const;
 
 const handler = NextAuth(authOptions);
 export { handler as GET, handler as POST }

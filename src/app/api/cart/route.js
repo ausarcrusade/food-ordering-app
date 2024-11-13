@@ -1,10 +1,10 @@
-import { getServerSession } from "next-auth";
+import { getSession } from "@/lib/auth";
 import { User } from "@/models/User";
 import { connectToDatabase } from "@/lib/mongoose";
 
 export async function GET(req) {
     try {
-        const session = await getServerSession();
+        const session = await getSession();
         if (!session?.user?.email) {
             return Response.json([]);
         }
@@ -20,7 +20,7 @@ export async function GET(req) {
 
 export async function PUT(req) {
     try {
-        const session = await getServerSession();
+        const session = await getSession();
         if (!session?.user?.email) {
             return Response.json({ error: 'Not authenticated' }, { status: 401 });
         }
