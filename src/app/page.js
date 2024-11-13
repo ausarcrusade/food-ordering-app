@@ -7,27 +7,29 @@ export default function Home() {
   return (
     <>
       <Hero />
-      <HomeMenu />
-      <HomeMenuWithAddOns />
-      <section>
+      <section id="menu">
+        <HomeMenu />
+        <HomeMenuWithAddOns />
+      </section>
+      <section id="about">
         <SectionHeaders 
           subHeader="Our Story"
-        mainHeader="About Us"
-      />
-      <div className="text-center text-gray-800 max-w-3xl mx-auto flex flex-col gap-4 mt-2">
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos. Voluptatibus,
-          quae, quod, voluptates quia voluptatum quibusdam voluptatem quas quidem natus doloribus. 
-          Quisquam, quos. Voluptatibus, quae, quod, voluptates quia voluptatum quibusdam voluptatem
-          quas quidem natus doloribus. Quisquam, quos. Voluptatibus, quae, quod, voluptates quia
-          voluptatum quibusdam voluptatem quas quidem natus doloribus.
-        </p>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.
-        </p>
+          mainHeader="About Us"
+        />
+        <div className="text-center text-gray-800 max-w-3xl mx-auto flex flex-col gap-4 mt-2">
+          <p>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos. Voluptatibus,
+            quae, quod, voluptates quia voluptatum quibusdam voluptatem quas quidem natus doloribus. 
+            Quisquam, quos. Voluptatibus, quae, quod, voluptates quia voluptatum quibusdam voluptatem
+            quas quidem natus doloribus. Quisquam, quos. Voluptatibus, quae, quod, voluptates quia
+            voluptatum quibusdam voluptatem quas quidem natus doloribus.
+          </p>
+          <p>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.
+          </p>
         </div>
       </section>
-      <section className="mt-10 text-center">
+      <section id="contact" className="mt-10 text-center">
         <SectionHeaders 
           subHeader="Any Enquiries?"
           mainHeader="Contact Us"

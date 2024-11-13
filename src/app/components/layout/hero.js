@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function Hero() {
   return (
-    <section className="grid grid-cols-2">
+    <section id="hero" className="grid grid-cols-2">
         <div className="flex flex-col justify-center">
             <h1 className="text-5xl font-bold">
                 Welcome to <span className="text-primary">Pasta Express</span>

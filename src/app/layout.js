@@ -26,15 +26,15 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${roboto.variable} ${robotoMono.variable} antialiased`}>
-        <main className="max-w-4xl mx-auto p-4">
-          <AppProvider>
-            <Header />
+        <AppProvider>
+          <Header />
+          <main className="max-w-4xl mx-auto p-4 pt-6">
             {children}
             <footer className="border-t p-8 text-center text-gray-500 mt-10">
               &copy; 2024 All Rights Reserved.
             </footer>
-          </AppProvider>
-        </main>
+          </main>
+        </AppProvider>
       </body>
     </html>
   );
