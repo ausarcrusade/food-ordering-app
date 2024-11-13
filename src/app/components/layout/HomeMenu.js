@@ -7,24 +7,48 @@ export default function HomeMenu() {
     const menuItems = [
         {
             _id: '1',
-            title: 'Spaghetti Meatballs',
-            description: 'Classic Italian meatballs with tomato sauce',
-            price: 15.99,
-            image: '/meatballs.png'
+            title: 'Carbonara',
+            description: 'Cream Sauce + Spaghetti, Pork Bacon, Sous Vide Egg, Spinach, Button Mushroom',
+            price: 11.80,
+            image: '/Carbonara.jpg'
         },
         {
             _id: '2',
-            title: 'Fettuccine Alfredo',
-            description: 'Creamy pasta with parmesan cheese',
-            price: 14.99,
-            image: '/meatballs.png'
+            title: 'Bolognese',
+            description: 'Tomato Sauce + Spaghetti, Minced Beef, Sous Vide Egg, Spinach, Button Mushroom',
+            price: 11.80,
+            image: '/Bolognese.jpg'
         },
         {
             _id: '3',
-            title: 'Spaghetti Carbonara',
-            description: 'Classic Italian carbonara with egg and cheese',
-            price: 13.99,
-            image: '/meatballs.png'
+            title: 'Chicken Alfredo',
+            description: 'Cream Sauce + Spaghetti, Chicken Thigh, Sous Vide Egg, Spinach, Button Mushroom',
+            price: 11.80,
+            image: '/Chicken Alfredo.jpg'
+        },
+
+        {
+            _id: '4',
+            title: 'Duck Aglio Olio',
+            description: 'Aglio Olio + Spaghetti, Smoked Duck, Sous Vide Egg, Spinach, Button Mushroom',
+            price: 11.80,
+            image: '/Duck Aglio Olio.jpg'
+        },
+
+        {
+            _id: '5',
+            title: 'Vegetable Delight',
+            description: 'Tomato Sauce + Spaghetti, Sous Vide Egg, Spinach, Button Mushroom, Capsicum, Black Olive',
+            price: 12.80,
+            image: '/Vegetable Delight.jpg'
+        },
+
+        {
+            _id: '6',
+            title: 'Meat Lovers',
+            description: 'Cream Sauce + Spaghetti, Smoked Duck, Pork Bacon, Chicken Thigh, Sous Vide Egg',
+            price: 12.60,
+            image: '/Meat Lovers.jpg'
         },
 
         // Add more menu items as needed

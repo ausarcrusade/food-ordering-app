@@ -120,7 +120,7 @@ export default function Home() {
                 }
               }} 
               className="bg-primary text-white px-10 py-2 rounded-full font-semibold hover:bg-primary/90 transition-colors w-64 mx-auto block">
-              Start Creating Your Pasta
+               Create Your Pasta
             </button>
           </div>
         </div>

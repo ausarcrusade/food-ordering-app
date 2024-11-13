@@ -14,24 +14,24 @@ export default function HomeMenuWithAddOns() {
         {
             _id: '1',
             title: 'Creamy Base',
-            description: 'Creamy pasta sauce with parmesan cheese',
-            price: 1.99,
-            image: '/meatballs.png'
+            description: 'Rich, velvety, and indulgent – luxurious sauce that wraps every bite in smoothness',
+            price: 2.99,
+            image: '/cream-base.jpg'
         },
         {
             _id: '2',
             title: 'Tomato Base ',
-            description: 'Tomato pasta sauce with garlic and olive oil',
-            price: 1.99,
-            image: '/meatballs.png'
+            description: 'Bold, vibrant, and zesty – classic burst of fresh, sun-ripened tomato goodness',
+            price: 2.99,
+            image: '/tomato-base.jpg'
         },
         {
             _id: '3',
-            title: 'Tomyum Base',
-            description: 'Tomyum flavored creamy pasta sauce',
-            price: 1.99,
-            image: '/meatballs.png'
-        },
+            title: 'Aglio Olio Base',
+            description: 'Light, garlicky, and aromatic – savory blend that celebrates the essence of Italian cuisine',
+            price: 2.99,
+            image: '/oil-base.jpg'
+        }
     ];
 
     const handleAddToCartClick = (item) => {
@@ -81,7 +81,7 @@ export default function HomeMenuWithAddOns() {
                             {item.description}
                         </p>
                         <p className="text-2xl font-bold text-primary mb-4">
-                            Starting at ${item.price.toFixed(2)}
+                            From ${item.price.toFixed(2)}
                         </p>
                         <button 
                             onClick={() => handleAddToCartClick(item)}

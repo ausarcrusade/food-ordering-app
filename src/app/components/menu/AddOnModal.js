@@ -19,12 +19,21 @@ export default function AddOnModal({
     const [pastaName, setPastaName] = useState(item.title);
 
     const addOns = [
-        { id: '1', name: 'Chicken', price: 2.5, category: 'protein', icon: '🍗' },
-        { id: '2', name: 'Shrimp', price: 3, category: 'protein', icon: '🦐' },
-        { id: '3', name: 'Mushrooms', price: 1.5, category: 'vegetable', icon: '🍄' },
-        { id: '4', name: 'Bell Peppers', price: 1, category: 'vegetable', icon: '🫑' },
-        { id: '5', name: 'Parmesan Cheese', price: 1, category: 'cheese', icon: '🧀' },
-        { id: '6', name: 'Mozzarella', price: 1.5, category: 'cheese', icon: '🧀' },
+        { id: '1', name: 'Smoke Duck', price: 1.80, category: 'protein', icon: '🦆' },
+        { id: '2', name: 'Pork Bacon', price: 1.80, category: 'protein', icon: '🥓' },
+        { id: '3', name: 'Minced Beef', price: 1.80, category: 'protein', icon: '🥩' },
+        { id: '4', name: 'Chicken Thigh', price: 1.80, category: 'protein', icon: '🍗' },
+        { id: '5', name: 'Prawn', price: 1.80, category: 'protein', icon: '🦐' },
+        { id: '6', name: 'Jumbo Chicken Sausage', price: 1.80, category: 'protein', icon: '🌭' },
+        { id: '7', name: 'Sous Vide Egg', price: 1.80, category: 'protein', icon: '🥚' },
+        
+        { id: '8', name: 'Spinach', price: 1.40, category: 'vegetable', icon: '🥬' },
+        { id: '9', name: 'Button Mushroom', price: 1.40, category: 'vegetable', icon: '🍄' },
+        { id: '10', name: 'Corn', price: 1.40, category: 'vegetable', icon: '🌽' },
+        { id: '11', name: 'Cherry Tomato', price: 1.40, category: 'vegetable', icon: '🍅' },
+        { id: '12', name: 'Broccoli', price: 1.40, category: 'vegetable', icon: '🥦' },
+        { id: '13', name: 'Capsicum', price: 1.40, category: 'vegetable', icon: '🫑' },
+        { id: '14', name: 'Black Olive', price: 1.40, category: 'vegetable', icon: '🫒' },
     ];
 
     const generatePastaImage = async () => {
@@ -110,9 +119,8 @@ export default function AddOnModal({
             localSelectedAddOns.includes(addOn.id)
         );
         
-        // Create a customized item with add-ons and updated price
         const customizedItem = {
-            _id: `${item._id}-${localSelectedAddOns.join('-')}`, // Create unique ID for this combination
+            _id: `${item._id}-${localSelectedAddOns.join('-')}`,
             title: pastaName,
             description: `${item.description} with ${selectedAddOnDetails.map(addon => addon.name).join(', ')}`,
             price: totalPrice,
@@ -136,7 +144,7 @@ export default function AddOnModal({
 
     return (
         <div 
-            className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-start overflow-hidden"
+            className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-start overflow-hidden z-[60]"
             onClick={handleClose}
         >
             <div className="fixed inset-0 flex items-center justify-center p-4">
@@ -181,7 +189,7 @@ export default function AddOnModal({
                     <div className="p-6">
                         <h4 className="text-xl font-semibold mb-4">Choose your ingredients:</h4>
                         <div className="space-y-4">
-                            {['protein', 'vegetable', 'cheese'].map(category => (
+                            {['protein', 'vegetable'].map(category => (
                                 <details 
                                     key={category} 
                                     className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden"
