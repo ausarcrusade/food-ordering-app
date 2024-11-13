@@ -6,7 +6,7 @@ import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
 import PaymentForm from '../components/payment/PaymentForm';
 import Image from 'next/image';
-
+import { useSession } from 'next-auth/react';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 
@@ -15,6 +15,7 @@ export default function PaymentPage() {
     const { cartProducts, clearCart } = useCart();
     const [clientSecret, setClientSecret] = useState(null);
     const [error, setError] = useState(null);
+    const { data: session } = useSession();
 
     const subtotal = cartProducts.reduce((acc, item) => 
         acc + (item.price * item.quantity), 0
@@ -22,6 +23,7 @@ export default function PaymentPage() {
 
     useEffect(() => {
         const deliveryAddress = localStorage.getItem('deliveryAddress');
+        const guestEmail = localStorage.getItem('guestEmail');
         
         // Create PaymentIntent as soon as the page loads
         fetch('/api/payment', {
@@ -31,7 +33,8 @@ export default function PaymentPage() {
                 amount: subtotal,
                 items: cartProducts,
                 deliveryOption: deliveryAddress ? 'delivery' : 'pickup',
-                address: deliveryAddress ? JSON.parse(deliveryAddress) : null
+                address: deliveryAddress ? JSON.parse(deliveryAddress) : null,
+                email: session?.user?.email || guestEmail
             }),
         })
         .then((res) => res.json())
@@ -47,7 +50,7 @@ export default function PaymentPage() {
         .catch((err) => {
             setError('Failed to initialize payment');
         });
-    }, [subtotal, cartProducts]);
+    }, [subtotal, cartProducts, session]);
 
     return (
         <div className="max-w-2xl mx-auto py-8 px-4">

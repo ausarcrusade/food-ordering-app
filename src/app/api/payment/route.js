@@ -7,7 +7,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 export async function POST(req) {
   try {
     const session = await getSession();
-    const { amount, deliveryOption, items, address } = await req.json();
+    const { amount, deliveryOption, items, address, email } = await req.json();
 
     // Ensure addOns are included in the items
     const simplifiedItems = items.map(item => ({
@@ -23,7 +23,7 @@ export async function POST(req) {
       amount: Math.round(amount * 100),
       currency: 'sgd',
       metadata: {
-        email: session?.user?.email || 'guest@example.com',
+        email: session?.user?.email || email || 'guest@example.com',
         deliveryOption,
         orderItems: JSON.stringify(simplifiedItems),
         ...(address ? { address: JSON.stringify(address) } : {})

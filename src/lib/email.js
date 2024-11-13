@@ -1,6 +1,8 @@
 import nodemailer from 'nodemailer';
 
 export async function sendOrderConfirmationEmail({ email, orderNumber, orderDetails }) {
+    console.log('Attempting to send email to:', email);
+    
     // Create test account if no email credentials
     let testAccount;
     if (!process.env.EMAIL_HOST) {
@@ -8,12 +10,12 @@ export async function sendOrderConfirmationEmail({ email, orderNumber, orderDeta
     }
 
     const transporter = nodemailer.createTransport({
-        host: 'smtp.gmail.com',
-        port: 465,
-        secure: true, // Use SSL/TLS
+        host: process.env.EMAIL_HOST,
+        port: process.env.EMAIL_PORT,
+        secure: true,
         auth: {
             user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASSWORD, // Use App Password here
+            pass: process.env.EMAIL_PASSWORD,
         }
     });
 
@@ -131,12 +133,17 @@ export async function sendOrderConfirmationEmail({ email, orderNumber, orderDeta
             `,
         });
 
-        console.log('Email sent:', info.messageId);
+        console.log('Email sent successfully to:', email);
+        console.log('Message ID:', info.messageId);
+        
         if (testAccount) {
             console.log('Preview URL:', nodemailer.getTestMessageUrl(info));
         }
+        
+        return info;
     } catch (error) {
-        console.error('Email sending error:', error);
+        console.error('Failed to send email:', error);
+        console.error('Email details:', { email, orderNumber });
         throw error;
     }
 }

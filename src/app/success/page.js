@@ -60,6 +60,7 @@ export default function PaymentSuccessPage() {
             .catch(err => console.error('Error fetching order details:', err))
             .finally(() => setIsProcessing(false));
         }
+        localStorage.removeItem('guestEmail');
     }, []);
 
     if (!orderDetails) {

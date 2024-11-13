@@ -4,12 +4,16 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { useSession } from 'next-auth/react';
+
 
 export default function CartPage() {
     const router = useRouter();
     const { cartProducts, updateQuantity, removeFromCart, clearCart } = useCart();
     const [deliveryOption, setDeliveryOption] = useState('pickup'); // 'pickup' or 'delivery'
     const deliveryFee = deliveryOption === 'delivery' ? 5.00 : 0.00;
+    const [email, setEmail] = useState('');
+    const { data: session } = useSession();
 
     const subtotal = cartProducts.reduce((acc, item) => 
         acc + (item.price * item.quantity), 0
@@ -18,11 +22,16 @@ export default function CartPage() {
     const total = subtotal + deliveryFee;
 
     const handleCheckout = () => {
+        if (!session?.user?.email && !email) {
+            alert('Please enter your email to continue');
+            return;
+        }
+
         if (deliveryOption === 'pickup') {
-            // Redirect directly to payment page for pickup
+            localStorage.setItem('guestEmail', email);
             router.push('/payment');
         } else {
-            // Redirect to address input page for delivery
+            localStorage.setItem('guestEmail', email);
             router.push('/delivery-address');
         }
     };
@@ -134,6 +143,20 @@ export default function CartPage() {
                         <div className="bg-white rounded-lg shadow-md p-6 border border-gray-100 sticky top-4">
                             <h3 className="text-xl font-bold mb-4">Order Summary</h3>
                             
+                            {!session?.user?.email && (
+                                <div className="mb-6">
+                                    <label className="block text-gray-700 mb-2">Email for Order Updates</label>
+                                    <input
+                                        type="email"
+                                        required
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                        placeholder="Enter your email"
+                                        className="w-full p-2 border border-gray-300 rounded-md"
+                                    />
+                                </div>
+                            )}
+
                             {/* Delivery Options */}
                             <div className="mb-6">
                                 <h4 className="font-semibold mb-3">Select Delivery Option</h4>
