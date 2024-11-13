@@ -1,6 +1,13 @@
 import Image from "next/image";
 
 export default function Hero() {
+  const scrollToSection = (sectionId) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <section id="hero" className="grid grid-cols-2">
         <div className="flex flex-col justify-center">
@@ -11,10 +18,14 @@ export default function Hero() {
                 Build your own pasta to perfection.
             </p>
             <div className="flex gap-4">
-                <button className="bg-primary text-white px-8 py-2 rounded-md font-bold">
+                <button 
+                    onClick={() => scrollToSection('menu')}
+                    className="bg-primary text-white px-8 py-2 rounded-md font-bold">
                     Order Now
                 </button>
-                <button className="bg-white text-primary px-8 py-2 rounded-md font-bold">
+                <button 
+                    onClick={() => scrollToSection('about')}
+                    className="bg-white text-primary px-8 py-2 rounded-md font-bold">
                     Learn More
                 </button>
             </div>
