@@ -26,9 +26,9 @@ export default function Hero() {
             </p>
             <div className="flex gap-4">
                 <button 
-                    onClick={() => scrollToSection('menu')}
+                    onClick={() => scrollToSection('menu-with-add-ons')}
                     className="bg-primary text-white px-8 py-2 rounded-md font-bold">
-                    Order Now
+                    Build Now
                 </button>
                 <button 
                     onClick={() => scrollToSection('about')}

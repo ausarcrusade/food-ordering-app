@@ -130,7 +130,7 @@ export default function CartPage() {
                                         <div className="text-right">
                                             <p className="text-sm text-gray-500">Price per item: ${item.price.toFixed(2)}</p>
                                             <p className="font-bold text-lg text-primary">
-                                                ${(item.price * item.quantity).toFixed(2)}
+                                               Subtotal: ${(item.price * item.quantity).toFixed(2)}
                                             </p>
                                         </div>
                                     </div>
